@@ -1,5 +1,6 @@
 import datetime
 import os
+import threading
 import tkinter as tk
 from tkinter import filedialog, ttk, messagebox
 
@@ -283,7 +284,8 @@ class MainApplication(tk.Frame):
         if errors:
             messagebox.showerror("Errors", "\n".join(errors))
         else:
-            self.pull_data()
+            thread = threading.Thread(target=self.pull_data)
+            thread.start()
 
     def clear(self):
         self.logging_listbox.delete(0, tk.END)
