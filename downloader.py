@@ -103,8 +103,8 @@ class MainApplication(tk.Frame):
         sep5 = ttk.Separator(self.l_frame, orient=tk.HORIZONTAL)
         sep5.grid(row=21, column=0, padx=5, pady=5, sticky="ew")
 
-        start_button = tk.Button(self.l_frame, text="Start", command=self.start)
-        start_button.grid(row=22, column=0)
+        self.start_button = tk.Button(self.l_frame, text="Start", command=self.start)
+        self.start_button.grid(row=22, column=0)
 
         self.r_frame = tk.Frame(self)
         self.r_frame.grid(row=0, column=2, sticky="ne")
@@ -235,6 +235,9 @@ class MainApplication(tk.Frame):
         elif selected_s_format == "XLSX":
             data.to_excel(path_w_filename + ".xlsx", index=False)
 
+    def switch_state(self, widget, state):
+        widget["state"] = state
+        
     def pull_data(self):
         sep_days_state = self.sep_d_var.get()
         selected_symbol = self.symbols_combobox.get()
@@ -242,6 +245,7 @@ class MainApplication(tk.Frame):
         delta = datetime.timedelta(days=1)
         timezone = pytz.timezone("Etc/UTC")
         if sep_days_state:
+            self.switch_state(self.start_button, "disabled")
             all_days = self.get_sep_days()
             for from_day in all_days:
                 to_day = from_day + delta
@@ -259,7 +263,9 @@ class MainApplication(tk.Frame):
                 current_time = datetime.datetime.now().strftime("%H:%M:%S")
                 logging_msg = f"{current_time} // Downloaded {filename}"
                 self.logging_listbox.insert("end", logging_msg)
+            self.switch_state(self.start_button, "normal")
         else:
+            self.switch_state(self.start_button, "disabled")
             from_date = self.get_from_date_obj()
             to_date = self.get_to_date_obj()
             from_y, from_m, from_d = self.get_from_date_vals(from_date)
@@ -278,6 +284,7 @@ class MainApplication(tk.Frame):
             current_time = datetime.datetime.now().strftime("%H:%M:%S")
             logging_msg = f"{current_time} // Downloaded {filename}"
             self.logging_listbox.insert("end", logging_msg)
+            self.switch_state(self.start_button, "normal")
 
     def start(self):
         errors = self.check_errors()
