@@ -26,3 +26,6 @@ If everything is filled right - it will start downloading data, if not - you wil
 # Very important
 Make sure you have the latest MT5 terminal version
 ```
+
+# Demo
+![](mt5_historical_data_downloader.jpg)
